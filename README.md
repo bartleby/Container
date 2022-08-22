@@ -1,4 +1,6 @@
-![Container](/Images/header.png)
+<p align="center">
+  <img width="512" height="512" src="/Images/header.png">
+</p>
 
 Container
 ========
