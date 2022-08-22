@@ -11,6 +11,11 @@ public struct ContainerLabel {
     
     // MARK: - Properties
     let value: String
+    
+    // MARK: - Init/Deinit
+    init(value: String) {
+        self.value = value
+    }
 }
 
 // MARK: - Equatable
