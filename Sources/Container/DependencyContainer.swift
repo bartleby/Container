@@ -19,6 +19,9 @@ final public class DependencyContainer {
         configureAssembly(container: self)
         configureDependency(container: self)
     }
+    
+    public func configureAssembly(container: AssemblyApplier) {}
+    public func configureDependency(container: DependencyApplier) {}
 }
 
 extension DependencyContainer: AssemblyApplier {
