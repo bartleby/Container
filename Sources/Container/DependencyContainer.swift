@@ -15,13 +15,7 @@ final public class DependencyContainer {
     static public let shared: DependencyContainer = DependencyContainer()
     
     // MARK: - Init/Deinit
-    private init() {
-        configureAssembly(container: self)
-        configureDependency(container: self)
-    }
-    
-    public func configureAssembly(container: AssemblyApplier) {}
-    public func configureDependency(container: DependencyApplier) {}
+    private init() {}
 }
 
 extension DependencyContainer: AssemblyApplier {

@@ -44,8 +44,3 @@ public protocol StrongBox: AnyObject {
 public protocol WeakBox: AnyObject {
     var weakBoxHolder: [String : WeakContainer<AnyObject>] { set get }
 }
-
-public protocol DependencyConfigurator {
-    func configureAssembly(container: AssemblyApplier)
-    func configureDependency(container: DependencyApplier)
-}
