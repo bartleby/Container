@@ -2,4 +2,9 @@
 
 import Foundation
 
-extension DependencyContainer: DependencyConfigurator {}
+//extension DependencyConfigurator {
+//    public func configureAssembly(container: AssemblyApplier) {}
+//    public func configureDependency(container: DependencyApplier) {}
+//}
+//
+//extension DependencyContainer: DependencyConfigurator {}
