@@ -13,7 +13,7 @@ public struct ContainerLabel {
     let value: String
     
     // MARK: - Init/Deinit
-    init(value: String) {
+    public init(value: String) {
         self.value = value
     }
 }
