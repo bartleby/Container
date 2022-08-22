@@ -12,7 +12,9 @@ Container is available through [Swift Package Manager](https://swift.org/package
 
 ### Swift Package Manager
 
-``` https://github.com/bartleby/SheetDetentsModifier.git ```
+```
+https://github.com/bartleby/SheetDetentsModifier.git
+```
 
 
 ## Basic Usage
@@ -79,6 +81,7 @@ class ViewModel {
 ### Scope
 
 You can specify the `scope` for your dependencies, `.weak` `.strong` and `.unowned`
+
 `.weak` scope is used by default
 
 ```swift 
