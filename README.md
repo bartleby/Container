@@ -153,15 +153,15 @@ extension ContainerLabel {
 First, register a `Assembly` to a `Container`
 
 ```swift
-extension DependencyContainer {
-    func configureAssembly(container: AssemblyApplier) {
+struct DependenciesConfigurator {
+    static func configure() {
+        let container = DependencyContainer.shared
+        
+        // Setup Modules
         container.apply(MainAssembly.self)
-        //...
-    }
-    
-    func configureDependency(container: DependencyApplier) {
+        
+        // Setup Services
         container.apply(AppConfigService() as AppConfigServiceProtocol)
-        //...
     }
 }
 ```
