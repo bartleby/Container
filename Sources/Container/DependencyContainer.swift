@@ -11,11 +11,8 @@ final public class DependencyContainer {
     public let factoryStorage: FactoryStorageProtocol = FactoryStorage()
     private var lock: RecursiveLock = RecursiveLock()
     
-    // MARK: - Singleton
-    static public let shared: DependencyContainer = DependencyContainer()
-    
     // MARK: - Init/Deinit
-    private init() {}
+    public init() {}
 }
 
 extension DependencyContainer: AssemblyApplier {
