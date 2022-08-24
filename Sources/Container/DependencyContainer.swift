@@ -7,37 +7,11 @@ final public class DependencyContainer {
     // MARK: - Properties
     public var weakBoxHolder = [String : WeakContainer<AnyObject>]()
     public var strongBoxHolder = [String : AnyObject]()
-    public let assemblyStorage: AssemblyStorageProtocol = AssemblyStorage()
     public let factoryStorage: FactoryStorageProtocol = FactoryStorage()
     private var lock: RecursiveLock = RecursiveLock()
     
     // MARK: - Init/Deinit
     public init() {}
-}
-
-extension DependencyContainer: AssemblyApplier {
-    public func apply<T>(_ type: T.Type, label: ContainerLabel) where T: AssemblyType {
-        lock.sync {
-            self.assemblyStorage.apply(type, label: label)
-        }
-    }
-    
-    public func apply<T>(_ type: T.Type) where T: AssemblyType {
-        self.apply(type, label: .none)
-    }
-}
-
-extension DependencyContainer: AssemblyResolver {
-    public func resolve<T>(_ type: T.Type, label: ContainerLabel) -> T where T: AssemblyType {
-        lock.sync {
-            let module = self.assemblyStorage.resolve(type, label: label)
-            return module.init(resolver: self)
-        }
-    }
-    
-    public func resolve<T>(_ type: T.Type) -> T where T: AssemblyType {
-        return self.resolve(type, label: .none)
-    }
 }
 
 extension DependencyContainer: DependencyApplier {
