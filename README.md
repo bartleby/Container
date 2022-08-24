@@ -33,17 +33,17 @@ In a real project, it is recommended to use the second approach.
 You can create a separate file with this extension
 
 ```swift
-extension DependencyContainer {
-    func configureAssembly(container: AssemblyApplier) {
+struct DependenciesConfigurator {
+    static func configure() {
+        let container = DependencyContainer.shared
+        
         // Setup Modules
         container.apply(AuthorizationAssembly.self)
         container.apply(RegistrationAssembly.self)
         container.apply(OnboardingAssembly.self)
         container.apply(MainAssembly.self)
         container.apply(SettingsAssembly.self)
-    }
-    
-    func configureDependency(container: DependencyApplier) {
+        
         // Setup Services
         container.apply(AppConfigService() as AppConfigServiceProtocol)
         container.apply(EnvironmentService() as EnvironmentServiceProtocol)
@@ -53,6 +53,22 @@ extension DependencyContainer {
         
         // Date Formatter
         container.apply(DateFormatterPool() as DateFormatterPoolProtocol)
+    }
+}
+
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        
+        // Setup Dependency
+        DependenciesConfigurator.configure()
+        
+        //...
+
+        return true
     }
 }
 ```
@@ -137,15 +153,15 @@ extension ContainerLabel {
 First, register a `Assembly` to a `Container`
 
 ```swift
-extension DependencyContainer {
-    func configureAssembly(container: AssemblyApplier) {
+struct DependenciesConfigurator {
+    static func configure() {
+        let container = DependencyContainer.shared
+        
+        // Setup Modules
         container.apply(MainAssembly.self)
-        //...
-    }
-    
-    func configureDependency(container: DependencyApplier) {
+        
+        // Setup Services
         container.apply(AppConfigService() as AppConfigServiceProtocol)
-        //...
     }
 }
 ```
