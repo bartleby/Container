@@ -11,12 +11,12 @@ final internal class FactoryStorage: FactoryStorageProtocol {
     private var factoryCollection = FactoryCollection()
     
     // MARK: - Public methods
-    func apply<T>(_ factory: Factory<T>, label: ContainerLabel) {
+    func apply<T>(_ factory: Factory<T>, label: DependencyLabel) {
         let key = StoreKey(T.self, label: label).key
         factoryCollection[key] = factory
     }
     
-    func resolve<T>(_ type: T.Type, label: ContainerLabel) -> Factory<T> {
+    func resolve<T>(_ type: T.Type, label: DependencyLabel) -> Factory<T> {
         let key = StoreKey(type, label: label).key
         guard let factory = factoryCollection[key] else {
             fatalError("Factory '\(String(describing: type))' has't been registered, use 'apply( _:)' method")

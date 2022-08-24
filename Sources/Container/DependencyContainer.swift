@@ -15,7 +15,7 @@ final public class DependencyContainer {
 }
 
 extension DependencyContainer: DependencyApplier {
-    public func apply<T>(_ builder: @escaping @autoclosure () -> T, label: ContainerLabel) {
+    public func apply<T>(_ builder: @escaping @autoclosure () -> T, label: DependencyLabel) {
         lock.sync {
             let factory = Factory(builder: builder)
             factoryStorage.apply(factory, label: label)
@@ -31,7 +31,7 @@ extension DependencyContainer: DependencyApplier {
 }
 
 extension DependencyContainer: DependencyResolver {
-    public func resolve<T>(_ type: T.Type, scope: DependencyScope = .weak, label: ContainerLabel) -> T {
+    public func resolve<T>(_ type: T.Type, scope: DependencyScope = .weak, label: DependencyLabel) -> T {
         lock.sync {
             let factory = self.factoryStorage.resolve(type, label: label)
             return scope.resolve(resolver: self, factory: factory, label: label)

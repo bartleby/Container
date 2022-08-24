@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ContainerLabel {
+public struct DependencyLabel {
     
     // MARK: - Properties
     let value: String
@@ -19,8 +19,8 @@ public struct ContainerLabel {
 }
 
 // MARK: - Equatable
-extension ContainerLabel: Equatable {}
+extension DependencyLabel: Equatable {}
 
-public extension ContainerLabel {
-    static let none = ContainerLabel(value: "none")
+public extension DependencyLabel {
+    static let none = DependencyLabel(value: "none")
 }

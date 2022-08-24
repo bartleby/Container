@@ -5,8 +5,8 @@ class TestClass {
     let id: String = UUID().uuidString
 }
 
-extension ContainerLabel {
-    static let test: ContainerLabel = ContainerLabel(value: "test")
+extension DependencyLabel {
+    static let test: DependencyLabel = DependencyLabel(value: "test")
 }
 
 extension Container {

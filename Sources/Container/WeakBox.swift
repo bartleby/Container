@@ -3,7 +3,7 @@
 import Foundation
 
 extension WeakBox {
-    func weakBox<T>(label: ContainerLabel, configure: () -> T) -> T {
+    func weakBox<T>(label: DependencyLabel, configure: () -> T) -> T {
         let key = StoreKey(T.self, label: label).key
         if let object = self.weakBoxHolder[key]?.value as? T {
             return object

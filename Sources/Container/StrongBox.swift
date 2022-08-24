@@ -3,7 +3,7 @@
 import Foundation
 
 extension StrongBox {
-    func strongBox<T>(label: ContainerLabel, configure: () -> T) -> T {
+    func strongBox<T>(label: DependencyLabel, configure: () -> T) -> T {
         let key = StoreKey(T.self, label: label).key
         if let object = self.strongBoxHolder[key] {
             return object as! T

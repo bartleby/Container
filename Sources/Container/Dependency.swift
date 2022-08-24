@@ -6,7 +6,7 @@ import Foundation
 final public class Dependency<T> {
     
     // MARK: - Properties
-    private let label: ContainerLabel
+    private let label: DependencyLabel
     private let scope: DependencyScope
     private var container: Container
     public var wrappedValue: T { value }
@@ -20,7 +20,7 @@ final public class Dependency<T> {
     public init(
         _ container: Container,
         scope: DependencyScope = .weak,
-        label: ContainerLabel = .none
+        label: DependencyLabel = .none
     ) {
         self.container = container
         self.label = label

@@ -7,7 +7,7 @@ public enum DependencyScope {
     case unowned
     case strong
     
-    func resolve<T>(resolver: DependencyResolver, factory: Factory<T>, label: ContainerLabel) -> T {
+    func resolve<T>(resolver: DependencyResolver, factory: Factory<T>, label: DependencyLabel) -> T {
         switch self {
         case .weak:
             return resolver.weakBox(label: label) { factory.builder() }

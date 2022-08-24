@@ -6,11 +6,11 @@ internal struct StoreKey {
     
     // MARK: - Properties
     fileprivate let objectType: Any.Type
-    fileprivate let label: ContainerLabel
+    fileprivate let label: DependencyLabel
     var key: String { String(hashValue) }
     
     // MARK: - Init/Deinit
-    internal init(_ objectType: Any.Type, label: ContainerLabel = .none) {
+    internal init(_ objectType: Any.Type, label: DependencyLabel = .none) {
         self.objectType = objectType
         self.label = label
     }
