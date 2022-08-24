@@ -10,12 +10,12 @@ Container is a lightweight [dependency injection](https://en.wikipedia.org/wiki/
 
 ## Installation
 
-Container is available through [Swift Package Manager](https://swift.org/package-manager/).
+is available in the [Swift Package Manager](https://swift.org/package-manager/).
 
 ### Swift Package Manager
 
 ```
-https://github.com/bartleby/SheetDetentsModifier.git
+https://github.com/bartleby/Container.git
 ```
 
 
