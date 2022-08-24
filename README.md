@@ -21,70 +21,64 @@ https://github.com/bartleby/Container.git
 
 ## Basic Usage
 
-First, register a service to a `Container`, there are two ways to register your dependencies, directly to the `Container` and through the expansion of DependencyContainer
+Firstly, you must defined your containers
 
 
 ```swift
-let container = DependencyContainer.shared
-container.apply(Service())
-```
+extension Container {
+    static let services = Container(ContainerConfigurator.services)
+    static let assemblies = Container(ContainerConfigurator.assemblies)
+    static let appearance = Container(ContainerConfigurator.appearance)
+}
 
-In a real project, it is recommended to use the second approach.
-You can create a separate file with this extension
-
-```swift
-struct DependenciesConfigurator {
-    static func configure() {
-        let container = DependencyContainer.shared
+struct ContainerConfigurator {
+    static var services: DependencyResolver {
+        let container = DependencyContainer()
         
-        // Setup Modules
-        container.apply(AuthorizationAssembly.self)
-        container.apply(RegistrationAssembly.self)
-        container.apply(OnboardingAssembly.self)
-        container.apply(MainAssembly.self)
-        container.apply(SettingsAssembly.self)
+        container.apply(Service() as ServiceProtocol)
+        container.apply(ServiceTwo(), label: .two)
         
-        // Setup Services
-        container.apply(AppConfigService() as AppConfigServiceProtocol)
-        container.apply(EnvironmentService() as EnvironmentServiceProtocol)
+        return container
+    }
+    
+    static var assemblies: DependencyResolver {
+        let container = DependencyContainer()
         
-        // Appearance
+        container.apply(MainAssembly())
+        container.apply(AuthorizationAssembly())
+        container.apply(RegistrationAssembly())
+        container.apply(OnboardingAssembly())
+        container.apply(MainAssembly())
+        container.apply(SettingsAssembly())
+        
+        return container
+    }
+    
+    static var appearance: DependencyResolver {
+        let container = DependencyContainer()
+        
         container.apply(Color.red, label: .redColor)
         
-        // Date Formatter
-        container.apply(DateFormatterPool() as DateFormatterPoolProtocol)
+        return container
     }
 }
 
-class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
-
-    func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-        
-        // Setup Dependency
-        DependenciesConfigurator.configure()
-        
-        //...
-
-        return true
-    }
-}
 ```
 
 Then get an instance of a service from the container. 
 
 ```swift
-let service = container.resolve(Service.self, scope: .unowned)
+let resolver = Container.services.resolver
+let service = resolver.resolve(Service.self, scope: .unowned)
 service.run()
 ```
 
-In a real project, it is recommended to use PropertyWrapers
+You can also use Propertywrapers
 
 ```swift
 class ViewModel {
-    @Container(scope: .strong) var config: AppConfigServiceProtocol
+
+    @Dependency(.services, scope: .strong) var config: AppConfigServiceProtocol
     
     //...
     
@@ -103,24 +97,18 @@ You can specify the `scope` for your dependencies, `.weak` `.strong` and `.unown
 `.weak` scope is used by default
 
 ```swift 
-@Container var service: ServiceProtocol // .weak scope is used
+@Dependency(.services) var service: ServiceProtocol // .weak scope is used by default
 ``` 
 
 How it's work
 
-- weak
-
-Keeps the object in memory while at least one object refers to it
+- `weak` Keeps the object in memory while at least one object refers to it
 
 
-- strong
-
-An analogue of Singletone, after creating the object, it always remains in memory even if no one refers to it
+- `strong` An analogue of Singletone, after creating the object, it always remains in memory even if no one refers to it
 
 
-- unowned
-
-The object is not stored in memory and each time create a new object
+- `unowned` The object is not stored in memory and each time create a new object
 
 
 ### Labels
@@ -136,33 +124,53 @@ container.apply(Color.orange, label: .orangeColor)
 
 ```
 
-In order to create your own `Label`, you need to extension the structure of `Containerlabel`
+In order to create your own `Label`, you need to extension the structure of `DependencyLabel`
 
 ```swift
-extension ContainerLabel {
+extension DependencyLabel {
     static let redColor = ContainerLabel(value: "redColor")
     static let greenColor = ContainerLabel(value: "greenColor")
     static let orangeColor = ContainerLabel(value: "orangeColor")
 }
 ```
 
-## Assembly
+Then you can specify a label when using
 
-`Container` also support `Assembly` for assembly your Modules
+```swift
+@Dependency(.appearance, scope: .strong, label: .redColor) var redColor: Color
+```
+
+
+
+## Assembly module
+
+You'r also can use `Assembly` for assembly your Modules with `Container`
 
 First, register a `Assembly` to a `Container`
 
 ```swift
-struct DependenciesConfigurator {
-    static func configure() {
-        let container = DependencyContainer.shared
+
+extension Container {
+    static let assembly = Container(ContainerConfigurator.assemblies)
+    //...
+}
+
+struct ContainerConfigurator {
+    
+    static var assemblies: DependencyResolver {
+        let container = DependencyContainer()
         
-        // Setup Modules
-        container.apply(MainAssembly.self)
+        container.apply(MainAssembly())
+        container.apply(AuthorizationAssembly())
+        container.apply(RegistrationAssembly())
+        container.apply(OnboardingAssembly())
+        container.apply(MainAssembly())
+        container.apply(SettingsAssembly())
         
-        // Setup Services
-        container.apply(AppConfigService() as AppConfigServiceProtocol)
+        return container
     }
+    
+    //...
 }
 ```
 
@@ -170,11 +178,14 @@ Then implement the MainAssembly class
 
 
 ```swift
+protocol Assembly<Coordinator> where Coordinator: CoordinatorProtocol {
+    func build(coordinator: Coordinator)
+}
+
 typealias MainModule = Module<MainModuleInput, MainModuleOutput>
 
-class MainAssembly: Assembly {
-    
-    @Container(scope: .strong) var config: AppConfigServiceProtocol
+class MainAssembly: Assembly<MainCoordinator> {
+    @Dependency(.services, scope: .strong) var config: AppConfigServiceProtocol
     
     func build(coordinator: MainCoordinator) -> MainModule {
         
@@ -202,7 +213,7 @@ class MainAssembly: Assembly {
 class MainCoordinator: BaseCoordinator {
     
     // MARK: - Dependencies
-    @AssemblyContainer var mainAssembly: MainAssembly
+    @Dependency(.assemblies) var mainAssembly: MainAssembly
     
     override func start() {
         let module = mainAssembly.build(coordinator: self)
