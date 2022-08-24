@@ -48,7 +48,6 @@ struct ContainerConfigurator {
         container.apply(AuthorizationAssembly())
         container.apply(RegistrationAssembly())
         container.apply(OnboardingAssembly())
-        container.apply(MainAssembly())
         container.apply(SettingsAssembly())
         
         return container
