@@ -176,13 +176,16 @@ Then implement the MainAssembly class
 
 
 ```swift
-protocol Assembly<Coordinator> where Coordinator: CoordinatorProtocol {
-    func build(coordinator: Coordinator)
+protocol Assembly {
+    associatedtype C: CoordinatorType
+    associatedtype M
+    
+    func build(coordinator: C) -> M
 }
 
 typealias MainModule = Module<MainModuleInput, MainModuleOutput>
 
-class MainAssembly: Assembly<MainCoordinator> {
+struct MainAssembly: Assembly {
     @Dependency(.services, scope: .strong) var config: AppConfigServiceProtocol
     
     func build(coordinator: MainCoordinator) -> MainModule {
